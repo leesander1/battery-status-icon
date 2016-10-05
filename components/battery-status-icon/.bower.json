@@ -1,0 +1,40 @@
+{
+  "name": "battery-status-icon",
+  "description": "Displays icon to indicate battery status using Web API",
+  "homepage": "https://leesander1.github.io/battery-status-icon",
+  "authors": [
+    "Lee Sander <lee@leesander.com> (https://leesander.com)"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "battery",
+    "charging"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/leesander1/battery-status-icon.git"
+  },
+  "ignore": [],
+  "main": "battery-status-icon.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "_release": "461d50cd43",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "461d50cd4365418114d7a52113eda287b8fb45c9"
+  },
+  "_source": "git://github.com/leesander1/battery-status-icon.git",
+  "_target": "master",
+  "_originalSource": "leesander1/battery-status-icon",
+  "_direct": true
+}
