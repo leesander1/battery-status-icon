@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>battery-status-icon demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../battery-status-icon.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic battery-status-icon Demo</h3>
+      <demo-snippet>
+        <template>
+          <battery-status-icon level="4"></battery-status-icon>
+          <battery-status-icon level="7"></battery-status-icon>
+          <battery-status-icon level="15"></battery-status-icon>
+          <battery-status-icon flipped level="25"></battery-status-icon>
+          <battery-status-icon hide-level level="55"></battery-status-icon>
+          <battery-status-icon rotated-right level="75"></battery-status-icon>
+          <battery-status-icon rotated-left detect></battery-status-icon>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>

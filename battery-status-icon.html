@@ -1,0 +1,265 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/device-icons.html">
+<dom-module id="battery-status-icon">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width:140px;
+        text-align: right;
+      }
+      #indicator {
+          color: var(--battery-status-indicator, #E0E0E0);
+          transform: var(--battery-status-icon-transform, rotate(0deg));
+          --iron-icon-height: var(--battery-status-icon-height,64px);
+          --iron-icon-width: var(--battery-status-icon-width,64px);
+          margin-top: -5px;
+
+      }
+      .full {
+          color: var(--battery-status-indicator-full, #00C853)!important;
+      }
+
+      .good {
+          color: var(--battery-status-indicator-good, #00E676)!important;
+      }
+
+      .medium {
+          color: var(--battery-status-indicator-medium, #BDE24D)!important;
+      }
+
+      .low {
+          color: var(--battery-status-indicator-low, #FFC400)!important;
+      }
+
+      .verylow {
+          color: var(--battery-status-indicator-verylow, #FF9100)!important;
+      }
+
+      .empty {
+        /*  --iron-icon-stroke-color: var(--battery-status-indicator-empty, #EF5350)!important;
+          --iron-icon-fill-color:var(--battery-status-indicator-empty-fill, #FFEBEE)!important; */
+          color: var(--battery-status-indicator-empty-fill, #FF8A80)!important;
+      }
+      #status {
+          text-align: right;
+          position: relative;;
+          width: 100%;
+          font-size: 20px;
+          font-weight: 700;
+      }
+    </style>
+    <div class="[[_calculateLevelStyle(level)]]">
+      <span id="status">[[level]]%</span>
+      <iron-icon id="indicator" class$="[[_calculateLevelStyle(level)]]" icon="[[_calculateLevelIcon(level, charging)]]"></iron-icon>
+
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'battery-status-icon',
+
+      properties: {
+        /**
+         * `level` indicates level of battery
+         */
+        level: {
+            type: Number,
+            value: 50,
+            oberserver: '_levelChanged'
+        },
+        /**
+        * `detect` indicates if the component will use Battery API to get
+        * current _state or just show provided value. When detect attribute
+        * provided component will use Battery API
+        */
+        detect: {
+            type: Boolean,
+            value: false
+        },
+        /**
+        * `charging` indicates if the the charging status of the battery
+        */
+        charging: {
+            type: Boolean,
+            value: false,
+            observer: '_chargeStatus'
+        },
+        /**
+        * `rotatedRight` indicates if the battery icon should be rotated to the right 90deg
+        */
+        rotatedRight: {
+            type: Boolean,
+            value: false,
+        },
+        /**
+        * `rotatedLeft` indicates if the battery icon should be rotated to the left 90deg
+        */
+        rotatedLeft: {
+            type: Boolean,
+            value: false,
+        },
+        /**
+        * `flipped` indicates if the battery icon should be rotated 180deg
+        */
+        flipped: {
+            type: Boolean,
+            value: false,
+        },
+        /**
+        * `hideLevel` indicates if the battery icon should be rotated 180deg
+        */
+        hideLevel: {
+            type: Boolean,
+            value: false,
+        },
+
+      },
+
+      // Element Lifecycle
+
+      attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+        var self = this;
+
+        //Show initial level battery
+        if(self.rotatedRight){
+          self.$.indicator.style.transform = "rotate(90deg)";
+          //self.$.status.style.margin = "0 0 0 5px";
+        }
+
+        if(self.rotatedLeft){
+          self.$.indicator.style.transform = "rotate(-90deg)";
+        }
+
+        if(self.flipped){
+          self.$.indicator.style.transform = "rotate(180deg)";
+        }
+
+        if(self.hideLevel){
+          //self.$.status.style.display = "none";
+          self.$.status.style.visibility = "hidden";
+        }
+
+        if(!self.detect){
+          return;
+        }
+
+        navigator.getBattery()
+          .then(function (battery) {
+            // Assign level & charging property
+            self.level = battery.level * 100;
+            self.charging = battery.charging;
+
+            // Listen for charging
+            battery.addEventListener('chargingchange', function(e) {
+              self.charging = battery.charging;
+            }, false);
+
+            // Listen for level change event
+            battery.addEventListener('levelchange', function(e) {
+              self.level = battery.level * 100;
+            }, false);
+
+          });
+      },
+
+      // Element Behavior
+      _levelChanged: function(){
+        var self = this;
+
+        //Make sure that it is not lower than 0
+        if(self.level < 0){
+            self.level = 0;
+        }
+
+        self._calculateLevelStyle();
+        self._calculateLevelIcon();
+    },
+
+    _chargeStatus: function(){
+        var self = this;
+        self._calculateLevelIcon();
+    },
+
+    _calculateLevelStyle: function(level){
+        if(level <= 5){
+          return 'empty'
+        }
+        else if(level <= 10){
+            return 'verylow';
+        }
+        else if(level <= 20){
+            return 'low';
+        }
+        else if(level <= 50){
+            return 'medium';
+        }
+        else if(level <= 80){
+            return 'good';
+        }
+
+        return 'full';
+    },
+
+    _calculateLevelIcon: function(level, charging){
+      //console.log(this.charging);
+      if(this.charging == true){
+        if(level <= 20){
+            return 'device:battery-charging-20';
+        }
+        else if(level <= 30){
+            return 'device:battery-charging-30';
+        }
+        else if(level <= 50){
+            return 'device:battery-charging-50';
+        }
+        else if(level <= 60){
+            return 'device:battery-charging-60';
+        }
+        else if(level <= 80){
+            return 'device:battery-charging-80';
+        }
+        else if(level <= 90){
+            return 'device:battery-charging-90';
+        }
+        return 'device:battery-charging-full';
+      }
+      else {
+        if(level<= 5){
+            return 'device:battery-alert';
+        }
+        else if(level <= 20){
+            return 'device:battery-20';
+        }
+        else if(level <= 30){
+            return 'device:battery-30';
+        }
+        else if(level <= 50){
+            return 'device:battery-50';
+        }
+        else if(level <= 60){
+            return 'device:battery-60';
+        }
+        else if(level <= 80){
+            return 'device:battery-80';
+        }
+        else if(level <= 90){
+            return 'device:battery-90';
+        }
+        return 'device:battery-full';
+      }
+    },
+
+
+    });
+  </script>
+</dom-module>
